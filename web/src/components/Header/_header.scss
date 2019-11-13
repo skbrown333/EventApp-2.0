@@ -1,0 +1,52 @@
+@import "../../styles/colors";
+
+.header {
+  height: 55px;
+  min-height: 55px;
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 24px;
+  align-items: center;
+  background: $color-white;
+  // box-shadow: 0 1px 3px 0 #d4d4d5, 0 0 0 1px #d4d4d5;
+  border-bottom: 1px solid $color-border;
+  z-index: 1;
+
+  &__link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: $color-white;
+    font-weight: 700;
+    text-transform: capitalize;
+    text-decoration: none;
+    font-size: 12px;
+    border-radius: 1px;
+    padding: 6px;
+    margin: 0 6px;
+    cursor: pointer;
+
+    &:hover {
+      padding-bottom: 3px;
+      border-bottom: 3px solid $color-white;
+    }
+
+    &:active {
+      color: darken($color-white, 10%);
+      border-bottom: 3px solid darken($color-white, 10%);
+    }
+  }
+
+  &__icon {
+    border-radius: 4px;
+    width: 32px;
+    height: 32px;
+    margin: 0 16px !important;
+  }
+  &__bar {
+    border-radius: 4px;
+    width: 250px;
+    height: 32px;
+    margin: 0 16px;
+  }
+}

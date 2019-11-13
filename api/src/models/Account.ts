@@ -11,6 +11,7 @@ let accountSchema = new mongoose.Schema(
     last_name: { type: String, required: true },
     email: { type: String, required: true },
     bio: { type: String, required: false },
+    hash: { type: String, required: true }
   },
   schemaOptions
 );

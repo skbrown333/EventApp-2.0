@@ -1,0 +1,10 @@
+@import "../../styles/colors";
+
+form {
+  margin: auto auto;
+  width: 300px;
+}
+
+.ui.form .field > label {
+  color: $color-gray-dark;
+}

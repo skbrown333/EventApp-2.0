@@ -1,0 +1,14 @@
+@import "./EventPin/styles";
+
+.map {
+  flex: 1;
+  position: relative;
+  background-color: $color-white;
+  border-radius: 2px;
+
+  div:nth-of-type(2) {
+    div:first-of-type {
+      border-radius: 2px;
+    }
+  }
+}
