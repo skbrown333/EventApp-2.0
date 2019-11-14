@@ -74,7 +74,9 @@ export class AppComponent extends React.Component<any> {
       let events = await eventService.get(null);
       this.props.updateEvents(events);
       this.setState({ loadingEvents: false });
-    } catch (err) {}
+    } catch (err) {
+      this.setState({ loadingEvents: false });
+    }
   };
 
   getContent = () => {

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Placeholder, Button, Modal, Icon, Input } from "semantic-ui-react";
+import { Placeholder, Button, Modal, Icon, Input, Dropdown } from "semantic-ui-react";
 import { updateCenter } from "../../store/actions";
 
 /* Styles */
@@ -12,7 +12,8 @@ class Header extends Component<any, any> {
   constructor(props: any) {
     super(props);
     this.state = {
-      loadingLocation: false
+      loadingLocation: false,
+      filterOpen: false
     };
   }
   getMyLocation: any = () => {
@@ -37,24 +38,49 @@ class Header extends Component<any, any> {
       );
     }
   };
+
+  toggleFilterOpen = () => {
+    this.setState({filterOpen: true});
+  }
+
+  toggleFilterClosed = () => {
+    this.setState({filterOpen: false});
+  }
+
   render() {
-    const { loadingLocation } = this.state;
+    const { loadingLocation, filterOpen } = this.state;
     return (
       <div className="header">
-        <Button.Group
-          className="header__actions"
-          buttons={[
-            { key: "search", icon: "search" },
-            {
-              key: "location",
-              icon: "location arrow",
-              onClick: this.getMyLocation,
-              loading: loadingLocation,
-              disabled: loadingLocation
-            }
-          ]}
-          style={{ marginRight: "8px" }}
-        />
+        <Button.Group style={{ marginRight: "8px" }}>
+          <Button icon="search" />
+          <Button icon="location arrow" onClick={this.getMyLocation} loading={loadingLocation} disabled={loadingLocation} />
+          <Dropdown
+            icon='filter'
+            floating
+            button
+            className='icon'
+            open={filterOpen}
+            onClick={this.toggleFilterOpen}
+            onBlur={this.toggleFilterClosed}
+          >
+            <Dropdown.Menu>
+              <Input icon='search' iconPosition='left' name='search' />
+              <Dropdown.Divider />
+              <Dropdown.Item
+                label={{ color: 'red', empty: true, circular: true }}
+                text='Important'
+              />
+              <Dropdown.Item
+                label={{ color: 'blue', empty: true, circular: true }}
+                text='Announcement'
+              />
+              <Dropdown.Item
+                label={{ color: 'black', empty: true, circular: true }}
+                text='Discussion'
+              />
+            </Dropdown.Menu>
+          </Dropdown>
+        </Button.Group>
         <Modal
           dimmer={"blurring"}
           trigger={<Button icon="add" content="Create Event"></Button>}
