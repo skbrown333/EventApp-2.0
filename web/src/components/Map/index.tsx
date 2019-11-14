@@ -42,7 +42,8 @@ export class MapComponent extends React.Component<any, State> {
     this.mapOptions = {
       disableDefaultUI: true,
       gestureHandling: this.props.hideActions ? "none" : "greedy",
-      enableHighAccuracy: true
+      enableHighAccuracy: true,
+      clickableIcons: false
     };
   }
 
