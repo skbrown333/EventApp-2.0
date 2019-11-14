@@ -1,5 +1,6 @@
 import * as React from "react";
 import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 
 /* Components */
 import GoogleMapReact from "google-map-react";
@@ -12,7 +13,6 @@ import { updateCenter } from "../../store/actions";
 /* Services */
 //@ts-ignore
 const API_KEY: any = process.env.REACT_APP_GOOGLE_MAPS_KEY;
-
 
 interface State {
   readonly eventPins: Array<any>;
@@ -44,7 +44,6 @@ export class MapComponent extends React.Component<any, State> {
       gestureHandling: this.props.hideActions ? "none" : "greedy",
       enableHighAccuracy: true
     };
-
   }
 
   /* LIFE CYCLE */
@@ -58,43 +57,31 @@ export class MapComponent extends React.Component<any, State> {
     } else {
       return null;
     }
-  }
+  };
 
   /* LOCATION */
   onMapChange = (properties: any) => {
+    console.log("properties: ", properties);
     if (!this.props.noUpdate) this.props.updateCenter(properties.center);
-    this.setState({zoom: properties.zoom });
-  }
-
-  getMyLocation = () => {
-    this.setState({ loading: true });
-    const location = window.navigator && window.navigator.geolocation;
-    let myLocation;
-
-    if (location) {
-      location.getCurrentPosition(
-        position => {
-          myLocation = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude
-          };
-          this.props.updateCenter(myLocation);
-          this.setState({loading: false, zoom: 14 });
-        },
-        error => {
-          this.setState({ loading: false });
-        },
-        { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
-      );
-    }
-  }
+    //@ts-ignore
+    this.props.history.push({
+      pathname: "/",
+      search:
+        "?" +
+        new URLSearchParams({
+          lat: properties.center.lat,
+          lng: properties.center.lng
+        }).toString()
+    });
+    this.setState({ zoom: properties.zoom });
+  };
 
   setEventPins = () => {
     let events = this.props.events || [];
     let accounts = this.props.accounts || [];
     let eventPins = events.map((event: any) => {
-      accounts.forEach((account:any) => {
-        if(account._id === event.account) {
+      accounts.forEach((account: any) => {
+        if (account._id === event.account) {
           event.account = account;
         }
       });
@@ -108,7 +95,7 @@ export class MapComponent extends React.Component<any, State> {
       );
     });
     this.setState({ eventPins: eventPins });
-  }
+  };
 
   render() {
     return (
@@ -151,7 +138,6 @@ const mapDispatchToProps = (dispatch: any) => ({
 export const Map = connect(
   mapStateToProps,
   mapDispatchToProps
-)(MapComponent);
-
+)(withRouter(MapComponent));
 
 export default Map;

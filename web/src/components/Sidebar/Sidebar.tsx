@@ -6,10 +6,28 @@ import { Input } from "semantic-ui-react";
 import "./_sidebar.scss";
 
 class Sidebar extends Component<any, any> {
+  getEvents = () => {
+    let eventRows = [];
+    let events = this.props.events;
+    for (var i = 0; i < events.length; i++) {
+      let event = events[i];
+
+      eventRows.push(
+        <div className="event" key={event._id} onClick={() => {}}>
+          <img className="img" src={event.img} alt="" />
+          <div className="name">{event.title}</div>
+        </div>
+      );
+    }
+
+    return eventRows;
+  };
+
   render() {
     return (
       <div className="sidebar">
         <Input icon="search" placeholder="Search..." />
+        {this.getEvents()}
       </div>
     );
   }
@@ -17,7 +35,7 @@ class Sidebar extends Component<any, any> {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    state: state,
+    events: state.events,
     cookies: ownProps.cookies
   };
 };

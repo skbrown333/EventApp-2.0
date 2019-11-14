@@ -1,30 +1,21 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
 import "./App.scss";
-import { Input } from "semantic-ui-react";
-import {
-  Card,
-  Dropdown,
-  Icon,
-  Menu,
-  Modal,
-  Button,
-  Form
-} from "semantic-ui-react";
 import AccountService from "./services/AccountService/account.service";
+import EventService from "./services/EventService/event.service";
 import { connect } from "react-redux";
 import { withCookies } from "react-cookie";
 import { COOKIES, ENV } from "./constants/constants";
-import { updateAccount } from "./store/actions";
+import { updateAccount, updateEvents, updateCenter } from "./store/actions";
 import { Map } from "./components/Map";
-import { DateTimeInput } from "semantic-ui-calendar-react";
 import Header from "./components/Header/header";
 import Sidebar from "./components/Sidebar/Sidebar";
 import Login from "./components/Login/Login";
-import SemanticDatepicker from "react-semantic-ui-datepickers";
-import "react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css";
+import queryString from "query-string";
+import { withRouter } from "react-router-dom";
 
 const accountService = new AccountService();
+const eventService = new EventService();
 
 export class AppComponent extends React.Component<any> {
   readonly state: any;
@@ -32,8 +23,20 @@ export class AppComponent extends React.Component<any> {
   constructor(props) {
     super(props);
 
+    let values = queryString.parse(this.props.location.search);
+    console.log("values: ", values);
+    //@ts-ignore
+    let lat: any = parseFloat(values.lat);
+    //@ts-ignore
+    let lng: any = parseFloat(values.lng);
+
+    if (lat && lng) {
+      this.props.updateCenter({ lat, lng });
+    }
+
     this.state = {
       loadingAccount: true,
+      loadingEvents: true,
       email: null,
       password: null,
       date: null
@@ -42,6 +45,7 @@ export class AppComponent extends React.Component<any> {
 
   componentDidMount = () => {
     this.getAccount();
+    this.getEvents();
   };
 
   getAccount = async () => {
@@ -65,11 +69,19 @@ export class AppComponent extends React.Component<any> {
     }
   };
 
+  getEvents = async () => {
+    try {
+      let events = await eventService.get(null);
+      this.props.updateEvents(events);
+      this.setState({ loadingEvents: false });
+    } catch (err) {}
+  };
+
   getContent = () => {
-    const { loadingAccount } = this.state;
+    const { loadingAccount, loadingEvents } = this.state;
     const { cookies, account } = this.props;
 
-    if (!loadingAccount) {
+    if (!loadingAccount && !loadingEvents) {
       return (
         <div className="app">
           <Route path="/" render={() => <Header cookies={cookies} />} />
@@ -121,9 +133,14 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapDispatchToProps = (dispatch: any) => ({
-  updateAccount: (account: any) => dispatch(updateAccount(account))
+  updateAccount: (account: any) => dispatch(updateAccount(account)),
+  updateEvents: (events: any) => dispatch(updateEvents(events)),
+  updateCenter: (center: any) => dispatch(updateCenter(center))
 });
 
-const App = connect(mapStateToProps, mapDispatchToProps)(AppComponent);
+const App = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(AppComponent));
 
 export default withCookies(App);

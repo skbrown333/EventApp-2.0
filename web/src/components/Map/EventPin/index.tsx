@@ -20,15 +20,19 @@ export class EventPin extends React.Component<EventPinProps, State> {
   };
 
   componentDidMount() {
-    if(!this.props.event) return;
-    let account:any = this.props.event.account;
+    if (!this.props.event) return;
+    let account: any = this.props.event.account;
   }
 
   render() {
     let event = this.props.event;
     return (
       <div className="event-pin">
-        <img className={"event-pin__icon " + this.state.class} src={event.img} alt=""/>
+        <img
+          className={"event-pin__icon " + this.state.class}
+          src="https://react.semantic-ui.com/images/wireframe/square-image.png"
+          alt="https://react.semantic-ui.com/images/wireframe/square-image.png"
+        />
       </div>
     );
   }
