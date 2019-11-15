@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Placeholder, Button, Modal, Icon, Input, Dropdown } from "semantic-ui-react";
+import { Placeholder, Button, Modal, Icon, Input, Dropdown, Form } from "semantic-ui-react";
 import { updateCenter } from "../../store/actions";
+import SemanticDatepicker from 'react-semantic-ui-datepickers';
+import 'react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css';
 
 /* Styles */
 import "./_header.scss";
@@ -88,13 +90,39 @@ class Header extends Component<any, any> {
           <Modal.Header style={{ background: "#f2f4f8" }}>
             Create Event
           </Modal.Header>
-          <Modal.Content>
-            <Modal.Description>Events can be created here</Modal.Description>
+          <Modal.Content style={{display: 'flex', flexDirection:'column', alignItems: 'center'}}>
             <Icon
               size="massive"
               style={{ color: "#d8d8d8" }}
               name="image outline"
             />
+            <Form className="event-form">
+              <Form.Field className="container">
+                <label>Title</label>
+                <input placeholder='' />
+              </Form.Field>
+              <Form.Field className="container">
+                <label>Date</label>
+                <SemanticDatepicker />
+              </Form.Field>
+              <Form.Field className="container">
+                <label>Start Time</label>
+                <input placeholder='' />
+              </Form.Field>
+              <Form.Field className="container">
+                <label>End Time</label>
+                <input placeholder='' />
+              </Form.Field>
+              <Form.Field className='container location'>
+                <label>Location</label>
+                <input placeholder='' />
+              </Form.Field>
+              <Form.Field className="container location">
+                <label>Description</label>
+                <textarea />
+              </Form.Field>
+              <Button type='submit' fluid primary>Submit</Button>
+            </Form>
           </Modal.Content>
         </Modal>
         <Placeholder className="header__icon"></Placeholder>

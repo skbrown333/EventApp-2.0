@@ -48,3 +48,40 @@ div#root {
 .App-link {
   color: #09d3ac;
 }
+
+.ui.form.event-form {
+  width: 100%;
+  margin: 0 0 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  button {
+    width: calc(80% + 4px);
+  }
+
+  textarea {
+    width: 100%;
+    background: $color-gray-background;
+    border: none;
+  }
+
+  .field.container {
+    min-width: 40%;
+    max-width: 40%;
+    margin-right: 4px;
+
+    .field {
+      width: 100%;
+    }
+    &.location {
+      max-width: calc(80% + 4px);
+      min-width: calc(80% + 4px);
+    }
+
+    input {
+      background: $color-gray-background !important;
+      border: none;
+    }
+  }
+}
