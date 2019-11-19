@@ -1,10 +1,14 @@
 import * as React from "react";
 import { connect } from "react-redux";
-import AccountService from "../../services/AccountService/account.service";
 import { COOKIES, ENV } from "../../constants/constants";
-import { updateAccount } from "../../store/actions";
-import { Button, Form } from "semantic-ui-react";
 
+/* UI */
+import { Button, Form } from "semantic-ui-react";
+/* Services */
+import AccountService from "../../services/AccountService/account.service";
+/* Store */
+import { updateAccount } from "../../store/actions";
+/* Styles */
 import "./_login.scss";
 
 const accountService = new AccountService();
@@ -13,6 +17,7 @@ interface State {
   readonly email: string;
   readonly password: string;
 }
+
 export class LoginComponent extends React.Component<any, State> {
   readonly state: State;
 
@@ -28,40 +33,17 @@ export class LoginComponent extends React.Component<any, State> {
   //@ts-ignore
   handleChange = (e, { name, value }) => this.setState({ [name]: value });
 
-  async handleLogin(event: any) {
-    event.preventDefault();
-    if (this.state.email === "" || this.state.password === "") return;
-    let options = {
-      email: this.state.email,
-      password: this.state.password
-    };
-    try {
-      let data = await accountService.authenticate(options);
-      if (!data.token) return;
-
-      this.props.cookies.set(COOKIES.token, data.token, {
-        secure: !ENV.isLocal
-      });
-      this.props.updateAccount(data.account);
-      console.log("data: ", data);
-      window.location.replace("/");
-    } catch (err) {
-      console.log("err: ", err);
-      console.log("Error Logging in");
-    }
-  }
-
   handleSubmit = async () => {
     if (this.state.email === "" || this.state.password === "") return;
+
     let options = {
       email: this.state.email,
       password: this.state.password
     };
+
     try {
       let data = await accountService.authenticate(options);
-      console.log("data: ", data);
       if (!data.token) return;
-
       this.props.cookies.set(COOKIES.token, data.token, {
         secure: !ENV.isLocal
       });

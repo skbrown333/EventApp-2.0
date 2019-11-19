@@ -6,7 +6,8 @@ import { EventPinProps } from "./EventPin.interfaces";
 
 /* Services */
 
-/* Icons */
+/* Styles */
+import "./_event-pin.scss";
 
 interface State {
   readonly open: boolean;

@@ -4,13 +4,15 @@ import { withRouter } from "react-router-dom";
 
 /* Components */
 import GoogleMapReact from "google-map-react";
-import { EventPin } from "./EventPin";
+import { EventPin } from "./EventPin/EventPin";
 
 /* Dialogs */
 
 import { updateCenter } from "../../store/actions";
 
-/* Services */
+/* Styles */
+import "./_map.scss";
+
 //@ts-ignore
 const API_KEY: any = process.env.REACT_APP_GOOGLE_MAPS_KEY;
 
@@ -33,7 +35,7 @@ export class MapComponent extends React.Component<any, State> {
     this.state = {
       eventPins: [],
       center: this.props.center,
-      zoom: this.props.hideActions ? 16 : 12,
+      zoom: this.props.hideActions ? 16 : 16,
       searchOpen: false,
       createEventOpen: false,
       loading: false
@@ -102,7 +104,6 @@ export class MapComponent extends React.Component<any, State> {
     return (
       <div className="map">
         {this.isLoading()}
-        {/* @ts-ignore */}
         <GoogleMapReact
           ref="map"
           bootstrapURLKeys={{ key: API_KEY }}

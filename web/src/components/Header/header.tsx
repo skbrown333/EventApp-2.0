@@ -1,9 +1,19 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Placeholder, Button, Modal, Icon, Input, Dropdown, Form } from "semantic-ui-react";
+import {
+  Placeholder,
+  Button,
+  Modal,
+  Icon,
+  Input,
+  Dropdown,
+  Form
+} from "semantic-ui-react";
 import { updateCenter } from "../../store/actions";
-import SemanticDatepicker from 'react-semantic-ui-datepickers';
-import 'react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css';
+import SemanticDatepicker from "react-semantic-ui-datepickers";
+import "react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css";
+import SearchPlaces from "../SearchPlaces/SearchPlaces";
+import { InputLocation } from "../Input/InputLocation/InputLocation";
 
 /* Styles */
 import "./_header.scss";
@@ -42,55 +52,75 @@ class Header extends Component<any, any> {
   };
 
   toggleFilterOpen = () => {
-    this.setState({filterOpen: true});
-  }
+    this.setState({ filterOpen: true });
+  };
 
   toggleFilterClosed = () => {
-    this.setState({filterOpen: false});
-  }
+    this.setState({ filterOpen: false });
+  };
+
+  onSearch = (data: any[]) => {
+    if (!data || !data.length) return;
+
+    let _center = {
+      lat: data[0].geometry.location.lat(),
+      lng: data[0].geometry.location.lng()
+    };
+
+    this.props.updateCenter(_center);
+  };
 
   render() {
     const { loadingLocation, filterOpen } = this.state;
     return (
       <div className="header">
+        <SearchPlaces onPlacesChanged={this.onSearch} />
+
         <Button.Group style={{ marginRight: "8px" }}>
-          <Button icon="search" />
-          <Button icon="location arrow" onClick={this.getMyLocation} loading={loadingLocation} disabled={loadingLocation} />
+          <Button
+            icon="location arrow"
+            onClick={this.getMyLocation}
+            loading={loadingLocation}
+            disabled={loadingLocation}
+          />
           <Dropdown
-            icon='filter'
+            icon="filter"
             floating
             button
-            className='icon'
+            className="icon"
             open={filterOpen}
             onClick={this.toggleFilterOpen}
             onBlur={this.toggleFilterClosed}
           >
             <Dropdown.Menu>
-              <Input icon='search' iconPosition='left' name='search' />
+              <Input icon="search" iconPosition="left" name="search" />
               <Dropdown.Divider />
               <Dropdown.Item
-                label={{ color: 'red', empty: true, circular: true }}
-                text='Important'
+                label={{ color: "red", empty: true, circular: true }}
+                text="Important"
               />
               <Dropdown.Item
-                label={{ color: 'blue', empty: true, circular: true }}
-                text='Announcement'
+                label={{ color: "blue", empty: true, circular: true }}
+                text="Announcement"
               />
               <Dropdown.Item
-                label={{ color: 'black', empty: true, circular: true }}
-                text='Discussion'
+                label={{ color: "black", empty: true, circular: true }}
+                text="Discussion"
               />
             </Dropdown.Menu>
           </Dropdown>
         </Button.Group>
-        <Modal
-          dimmer={"blurring"}
-          trigger={<Button icon="add" content="Create Event"></Button>}
-        >
+        <Modal trigger={<Button icon="add" content="Create Event"></Button>}>
           <Modal.Header style={{ background: "#f2f4f8" }}>
             Create Event
           </Modal.Header>
-          <Modal.Content style={{display: 'flex', flexDirection:'column', alignItems: 'center'}}>
+          <Modal.Content
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center"
+            }}
+          >
             <Icon
               size="massive"
               style={{ color: "#d8d8d8" }}
@@ -99,7 +129,7 @@ class Header extends Component<any, any> {
             <Form className="event-form">
               <Form.Field className="container">
                 <label>Title</label>
-                <input placeholder='' />
+                <input data-lpignore="true" placeholder="" />
               </Form.Field>
               <Form.Field className="container">
                 <label>Date</label>
@@ -107,21 +137,23 @@ class Header extends Component<any, any> {
               </Form.Field>
               <Form.Field className="container">
                 <label>Start Time</label>
-                <input placeholder='' />
+                <input data-lpignore="true" placeholder="" />
               </Form.Field>
               <Form.Field className="container">
                 <label>End Time</label>
-                <input placeholder='' />
+                <input data-lpignore="true" placeholder="" />
               </Form.Field>
-              <Form.Field className='container location'>
+              <Form.Field className="container location">
                 <label>Location</label>
-                <input placeholder='' />
+                <InputLocation onChange={() => {}} />
               </Form.Field>
               <Form.Field className="container location">
                 <label>Description</label>
                 <textarea />
               </Form.Field>
-              <Button type='submit' fluid primary>Submit</Button>
+              <Button className="submit-event" type="submit" fluid primary>
+                Submit
+              </Button>
             </Form>
           </Modal.Content>
         </Modal>

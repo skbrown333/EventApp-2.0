@@ -14,8 +14,20 @@
   flex-direction: column;
   padding: 12px;
 
+  .ui.input {
+    margin-bottom: 16px;
+  }
   .ui.input > input {
     background: $color-gray-background;
     border: none;
+  }
+
+  .event {
+    display: flex;
+    margin: 8px 0;
+
+    .header__icon {
+      margin: 0px 16px 0px 0px !important;
+    }
   }
 }

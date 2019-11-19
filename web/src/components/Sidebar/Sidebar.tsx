@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Input } from "semantic-ui-react";
+import { Input, Placeholder } from "semantic-ui-react";
 
 /* Styles */
 import "./_sidebar.scss";
@@ -14,7 +14,7 @@ class Sidebar extends Component<any, any> {
 
       eventRows.push(
         <div className="event" key={event._id} onClick={() => {}}>
-          <img className="img" src={event.img} alt="" />
+          <Placeholder className="header__icon"></Placeholder>
           <div className="name">{event.title}</div>
         </div>
       );
