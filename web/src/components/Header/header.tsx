@@ -14,6 +14,7 @@ import SemanticDatepicker from "react-semantic-ui-datepickers";
 import "react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css";
 import SearchPlaces from "../SearchPlaces/SearchPlaces";
 import { InputLocation } from "../Input/InputLocation/InputLocation";
+import Dropzone from "react-dropzone";
 
 /* Styles */
 import "./_header.scss";
@@ -25,7 +26,8 @@ class Header extends Component<any, any> {
     super(props);
     this.state = {
       loadingLocation: false,
-      filterOpen: false
+      filterOpen: false,
+      image: null
     };
   }
   getMyLocation: any = () => {
@@ -71,7 +73,8 @@ class Header extends Component<any, any> {
   };
 
   render() {
-    const { loadingLocation, filterOpen } = this.state;
+    const { loadingLocation, filterOpen, image } = this.state;
+
     return (
       <div className="header">
         <SearchPlaces onPlacesChanged={this.onSearch} />
@@ -121,11 +124,42 @@ class Header extends Component<any, any> {
               alignItems: "center"
             }}
           >
-            <Icon
-              size="massive"
-              style={{ color: "#d8d8d8" }}
-              name="image outline"
-            />
+            <Dropzone
+              onDrop={acceptedFiles => {
+                const reader = new FileReader();
+
+                reader.onabort = () => console.log("file reading was aborted");
+                reader.onerror = () => console.log("file reading has failed");
+                reader.onload = () => {
+                  // Do whatever you want with the file contents
+                  let image = reader.result;
+                  this.setState({ image });
+                };
+                reader.readAsDataURL(acceptedFiles[0]);
+              }}
+            >
+              {({ getRootProps, getInputProps }) => (
+                <section className="dropzone-container">
+                  <div className="dropzone" {...getRootProps()}>
+                    <input {...getInputProps()} />
+                    {!image ? (
+                      <Icon
+                        size="massive"
+                        style={{ color: "#d8d8d8" }}
+                        name="image outline"
+                      />
+                    ) : null}
+                    {image ? (
+                      <img
+                        src={image}
+                        alt=""
+                        style={{ width: "200px", height: "200px" }}
+                      />
+                    ) : null}
+                  </div>
+                </section>
+              )}
+            </Dropzone>
             <Form className="event-form">
               <Form.Field className="container">
                 <label>Title</label>
