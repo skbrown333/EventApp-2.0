@@ -26,7 +26,6 @@ export class EventPin extends React.Component<EventPinProps, State> {
   }
 
   render() {
-    let event = this.props.event;
     return (
       <div className="event-pin">
         <img

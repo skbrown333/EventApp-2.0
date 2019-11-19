@@ -5,10 +5,11 @@ import { withRouter } from "react-router-dom";
 /* Components */
 import GoogleMapReact from "google-map-react";
 import { EventPin } from "./EventPin/EventPin";
+import { LocationPin } from "./LocationPin/LocationPin";
 
 /* Dialogs */
 
-import { updateCenter } from "../../store/actions";
+import { updateCenter, updateZoom } from "../../store/actions";
 
 /* Styles */
 import "./_map.scss";
@@ -35,7 +36,7 @@ export class MapComponent extends React.Component<any, State> {
     this.state = {
       eventPins: [],
       center: this.props.center,
-      zoom: this.props.hideActions ? 16 : 16,
+      zoom: this.props.zoom,
       searchOpen: false,
       createEventOpen: false,
       loading: false
@@ -64,7 +65,6 @@ export class MapComponent extends React.Component<any, State> {
 
   /* LOCATION */
   onMapChange = (properties: any) => {
-    console.log("properties: ", properties);
     if (!this.props.noUpdate) this.props.updateCenter(properties.center);
     //@ts-ignore
     this.props.history.push({
@@ -73,10 +73,11 @@ export class MapComponent extends React.Component<any, State> {
         "?" +
         new URLSearchParams({
           lat: properties.center.lat,
-          lng: properties.center.lng
+          lng: properties.center.lng,
+          zoom: properties.zoom
         }).toString()
     });
-    this.setState({ zoom: properties.zoom });
+    this.props.updateZoom(properties.zoom);
   };
 
   setEventPins = () => {
@@ -101,6 +102,19 @@ export class MapComponent extends React.Component<any, State> {
   };
 
   render() {
+    const { current_location } = this.props;
+    let locationPin;
+
+    if(Object.keys(current_location).length) {
+      locationPin = (
+        <LocationPin
+          key={'location-pin'}
+          lat={current_location.lat}
+          lng={current_location.lng}
+          event={null}
+        />
+      )
+    }
     return (
       <div className="map">
         {this.isLoading()}
@@ -112,12 +126,13 @@ export class MapComponent extends React.Component<any, State> {
             lng: -89.386408
           }}
           center={this.props.center}
-          zoom={this.state.zoom}
-          defaultZoom={11}
+          zoom={this.props.zoom}
+          defaultZoom={15}
           onChange={this.onMapChange}
           options={this.mapOptions}
         >
           {this.state.eventPins}
+          {locationPin}
         </GoogleMapReact>
       </div>
     );
@@ -128,13 +143,16 @@ const mapStateToProps = (state: any, ownProps: any) => {
   return {
     events: state.events,
     accounts: state.accounts,
+    current_location: state.current_location,
     center: ownProps.center ? ownProps.center : state.center,
+    zoom: state.zoom,
     cookies: ownProps.cookies
   };
 };
 
 const mapDispatchToProps = (dispatch: any) => ({
-  updateCenter: (center: any) => dispatch(updateCenter(center))
+  updateCenter: (center: any) => dispatch(updateCenter(center)),
+  updateZoom: (zoom: any) => dispatch(updateZoom(zoom))
 });
 
 export const Map = connect(

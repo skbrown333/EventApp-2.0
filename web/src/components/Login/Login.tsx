@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { COOKIES, ENV } from "../../constants/constants";
 
 /* UI */
-import { Button, Form } from "semantic-ui-react";
+import { Button, Form, Input } from "semantic-ui-react";
 /* Services */
 import AccountService from "../../services/AccountService/account.service";
 /* Store */
@@ -57,10 +57,10 @@ export class LoginComponent extends React.Component<any, State> {
   render() {
     const { email, password } = this.state;
     return (
-      <Form onSubmit={this.handleSubmit}>
+      <Form className={'login'} onSubmit={this.handleSubmit}>
         <Form.Field>
           <label>Email</label>
-          <Form.Input
+          <Input
             placeholder="Email"
             name="email"
             value={email}
@@ -69,7 +69,7 @@ export class LoginComponent extends React.Component<any, State> {
         </Form.Field>
         <Form.Field>
           <label>Password</label>
-          <Form.Input
+          <Input
             placeholder="Password"
             type="password"
             name="password"

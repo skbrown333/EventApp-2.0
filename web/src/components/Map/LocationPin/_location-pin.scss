@@ -1,0 +1,18 @@
+@import "../../../styles/colors";
+
+.location-pin {
+  margin-top: -10px;
+  margin-left: -10px;
+  position: relative;
+  background-color: $color-blue;
+  border: 3px solid $color-white;
+  -webkit-box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.4);
+  box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.4);
+  width: 20px;
+  height: 20px;
+  border-radius: 50% !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

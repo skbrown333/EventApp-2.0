@@ -1,5 +1,17 @@
 @import "../../styles/colors";
 
+.login {
+  .ui.input > input {
+
+    &:focus {
+      background: $color-gray-background !important;
+      border: 1px solid $color-gray-border;
+    }
+    background: $color-gray-background;
+    border: 1px solid $color-gray-border;
+  }
+}
+
 form {
   margin: auto auto;
   width: 300px;

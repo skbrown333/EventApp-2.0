@@ -1,6 +1,15 @@
 import { combineReducers } from "redux";
 import * as Actions from "./actions";
 
+const current_location = (state = {}, action) => {
+  switch (action.type) {
+    case Actions.UPDATE_LOCATION_ACTION:
+      return Object.assign({}, state, action.payload);
+    default:
+      return state;
+  }
+};
+
 const center = (state = {}, action) => {
   switch (action.type) {
     case Actions.UPDATE_CENTER_ACTION:
@@ -12,7 +21,7 @@ const center = (state = {}, action) => {
 
 const zoom = (state = 12, action) => {
   switch (action.type) {
-    case Actions.UPDATE_CENTER_ACTION:
+    case Actions.UPDATE_ZOOM_ACTION:
       let zoom = action.payload;
       return zoom;
     default:
@@ -53,6 +62,7 @@ const toast = (state = [], action) => {
 export default combineReducers({
   account,
   events,
+  current_location,
   center,
   zoom,
   toast

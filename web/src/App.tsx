@@ -6,11 +6,12 @@ import EventService from "./services/EventService/event.service";
 import { connect } from "react-redux";
 import { withCookies } from "react-cookie";
 import { COOKIES, ENV } from "./constants/constants";
-import { updateAccount, updateEvents, updateCenter } from "./store/actions";
+import { updateAccount, updateEvents, updateCenter, updateZoom } from "./store/actions";
 import { Map } from "./components/Map/Map";
 import Header from "./components/Header/Header";
 import Sidebar from "./components/Sidebar/Sidebar";
 import Login from "./components/Login/Login";
+import CreateEvent from "./components/CreateEvent/CreateEvent";
 import queryString from "query-string";
 import { withRouter } from "react-router-dom";
 
@@ -23,15 +24,19 @@ export class AppComponent extends React.Component<any> {
   constructor(props) {
     super(props);
 
-    let values = queryString.parse(this.props.location.search);
-    console.log("values: ", values);
-    //@ts-ignore
+    let values: any = queryString.parse(this.props.location.search);
+    console.log('values: ', values);
     let lat: any = parseFloat(values.lat);
-    //@ts-ignore
     let lng: any = parseFloat(values.lng);
+    let zoom: any = parseInt(values.zoom);
+    console.log('zoom: ', zoom);
 
     if (lat && lng) {
       this.props.updateCenter({ lat, lng });
+    }
+
+    if(zoom) {
+      this.props.updateZoom(zoom)
     }
 
     this.state = {
@@ -107,6 +112,17 @@ export class AppComponent extends React.Component<any> {
             />
             <Route
               exact
+              path="/create-event"
+              render={() => {
+                return Object.keys(account).length > 0 ? (
+                  <Redirect to="/login" />
+                ) : (
+                  <CreateEvent />
+                );
+              }}
+            />
+            <Route
+              exact
               path="/logout"
               render={() => {
                 {
@@ -137,7 +153,8 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch: any) => ({
   updateAccount: (account: any) => dispatch(updateAccount(account)),
   updateEvents: (events: any) => dispatch(updateEvents(events)),
-  updateCenter: (center: any) => dispatch(updateCenter(center))
+  updateCenter: (center: any) => dispatch(updateCenter(center)),
+  updateZoom: (zoom: any) => dispatch(updateZoom(zoom))
 });
 
 const App = connect(
