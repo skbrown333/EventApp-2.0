@@ -58,7 +58,7 @@
 
 .dropzone-container {
   width: 80%;
-  height: 200px;
+  height: calc(80% / 16 * 9);
   display: flex;
   justify-content: center;
   align-items: center;
