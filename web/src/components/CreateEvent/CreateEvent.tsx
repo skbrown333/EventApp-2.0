@@ -20,10 +20,12 @@ interface State {
   readonly password: string;
   readonly image: any;
   readonly crop: any;
+  readonly imageHeight: number;
 }
 
 export class CreateEventComponent extends React.Component<any, State> {
   readonly state: State;
+  dropzoneRef: any;
 
   constructor(props: any) {
     super(props);
@@ -32,13 +34,24 @@ export class CreateEventComponent extends React.Component<any, State> {
       email: "",
       password: "",
       image: null,
+      imageHeight: 0,
       crop: {
         unit: "%",
         aspect: 16 / 9,
-        width: "80"
+        height: "100"
       }
     };
+
+    this.dropzoneRef = React.createRef();
   }
+
+  componentDidMount = () => {
+    let node = this.dropzoneRef.current;
+    if (node) {
+      let height = (node.getBoundingClientRect().width / 16) * 9;
+      this.setState({ imageHeight: height });
+    }
+  };
 
   //@ts-ignore
   handleChange = (e, { name, value }) => this.setState({ [name]: value });
@@ -50,7 +63,7 @@ export class CreateEventComponent extends React.Component<any, State> {
   };
 
   render() {
-    const { email, password, image, crop } = this.state;
+    const { email, password, image, crop, imageHeight } = this.state;
     return (
       <div className="create-event">
         <Dropzone
@@ -68,8 +81,18 @@ export class CreateEventComponent extends React.Component<any, State> {
           }}
         >
           {({ getRootProps, getInputProps }) => (
-            <section className="dropzone-container" id="dropzone">
-              <div className="dropzone" {...getRootProps()}>
+            <section
+              className="dropzone-container"
+              id="dropzone"
+              ref={this.dropzoneRef}
+            >
+              <div
+                className="dropzone"
+                {...getRootProps()}
+                style={{
+                  height: imageHeight
+                }}
+              >
                 <input disabled={!!image} {...getInputProps()} />
                 {!image ? (
                   <Icon
@@ -96,8 +119,10 @@ export class CreateEventComponent extends React.Component<any, State> {
                     onComplete={c => {}}
                     onChange={this.onCropChange}
                     imageStyle={{
-                      width: document.getElementById("dropzone").offsetWidth,
-                      height: document.getElementById("dropzone").offsetHeight,
+                      width: this.dropzoneRef.current.getBoundingClientRect()
+                        .width,
+                      height: this.dropzoneRef.current.getBoundingClientRect()
+                        .height,
                       objectFit: "contain"
                     }}
                   />
@@ -106,35 +131,37 @@ export class CreateEventComponent extends React.Component<any, State> {
             </section>
           )}
         </Dropzone>
-        <Form className="event-form">
-          <Form.Field className="container">
-            <label>Title</label>
-            <input data-lpignore="true" placeholder="" />
-          </Form.Field>
-          <Form.Field className="container">
-            <label>Date</label>
-            <SemanticDatepicker />
-          </Form.Field>
-          <Form.Field className="container">
-            <label>Start Time</label>
-            <input data-lpignore="true" placeholder="" />
-          </Form.Field>
-          <Form.Field className="container">
-            <label>End Time</label>
-            <input data-lpignore="true" placeholder="" />
-          </Form.Field>
-          <Form.Field className="container location">
-            <label>Location</label>
-            <InputLocation onChange={() => {}} />
-          </Form.Field>
-          <Form.Field className="container location">
-            <label>Description</label>
-            <textarea />
-          </Form.Field>
-          <Button className="submit-event" type="submit" fluid primary>
-            Submit
-          </Button>
-        </Form>
+        {this.dropzoneRef ? (
+          <Form className="event-form">
+            <Form.Field className="container">
+              <label>Title</label>
+              <input data-lpignore="true" placeholder="" />
+            </Form.Field>
+            <Form.Field className="container">
+              <label>Date</label>
+              <SemanticDatepicker />
+            </Form.Field>
+            <Form.Field className="container">
+              <label>Start Time</label>
+              <input data-lpignore="true" placeholder="" />
+            </Form.Field>
+            <Form.Field className="container">
+              <label>End Time</label>
+              <input data-lpignore="true" placeholder="" />
+            </Form.Field>
+            <Form.Field className="container location">
+              <label>Location</label>
+              <InputLocation onChange={() => {}} />
+            </Form.Field>
+            <Form.Field className="container location">
+              <label>Description</label>
+              <textarea />
+            </Form.Field>
+            <Button className="submit-event" type="submit" fluid primary>
+              Submit
+            </Button>
+          </Form>
+        ) : null}
       </div>
     );
   }

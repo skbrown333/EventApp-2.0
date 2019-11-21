@@ -1,8 +1,32 @@
+@import "../../styles/colors";
+
 .create-event {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  flex: 1;
   align-items: center;
+  margin: 16px 0 128px 0;
   max-width: 800px;
-  padding-top: 16px;
+
+  .dropzone-container {
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .dropzone {
+    background: $color-gray-background;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    border: 2px dashed $color-gray-border;
+    align-items: center;
+
+    &:focus {
+      outline: none;
+      border: 2px dashed rgb(153, 153, 255);
+    }
+  }
 }
