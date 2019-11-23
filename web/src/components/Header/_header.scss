@@ -1,4 +1,5 @@
 @import "../../styles/colors";
+@import "../../styles//responsive";
 
 .header {
   position: sticky;
@@ -13,6 +14,23 @@
   // box-shadow: 0 1px 3px 0 #d4d4d5, 0 0 0 1px #d4d4d5;
   border-bottom: 1px solid $color-border;
   z-index: 1;
+
+  .search-places {
+    position: absolute;
+    right: 0;
+    left: 0;
+    margin: 0 auto;
+    height: 36px;
+    width: 200px;
+  }
+
+  @include respond-to(gt-xs) {
+    .search-places {
+      position: relative;
+      width: 300px;
+      margin: 0 16px 0 0;
+    }
+  }
 
   &__link {
     display: flex;
@@ -45,6 +63,11 @@
     height: 32px;
     margin: 0 16px !important;
   }
+
+  &__avatar {
+    margin: 0 16px !important;
+  }
+
   &__bar {
     border-radius: 4px;
     width: 250px;
@@ -56,4 +79,6 @@
 .logo {
   position: absolute !important;
   left: 8px;
+  height: 40px;
+  width: 40px;
 }

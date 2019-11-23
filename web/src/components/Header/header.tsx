@@ -1,12 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import {
-  Placeholder,
-  Button,
-  Modal,
-  Input,
-  Dropdown,
-} from "semantic-ui-react";
+import { withRouter } from "react-router-dom";
+import { Button, Avatar, Skeleton } from "antd";
 import { updateCenter, updateLocation } from "../../store/actions";
 
 import SearchPlaces from "../SearchPlaces/SearchPlaces";
@@ -23,12 +18,27 @@ class Header extends Component<any, any> {
     this.state = {
       loadingLocation: false,
       filterOpen: false,
-      image: null
+      image: null,
+      width: window.innerWidth
     };
   }
 
   componentDidMount = () => {
     this.setMyLocation();
+    window.addEventListener("resize", this.updateWindowDimensions);
+  };
+
+  componentDidUnmount() {
+    window.removeEventListener("resize", this.updateWindowDimensions);
+  }
+
+  updateWindowDimensions = () => {
+    this.setState({ width: window.innerWidth });
+  };
+
+  shouldComponentUpdate(nextProps) {
+    console.log("nextProps: ", nextProps);
+    return true;
   }
 
   setMyLocation: any = () => {
@@ -44,12 +54,11 @@ class Header extends Component<any, any> {
           };
           this.props.updateLocation(myLocation);
         },
-        error => {
-        },
+        error => {},
         { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
       );
     }
-  }
+  };
   getMyLocation: any = () => {
     this.setState({ loadingLocation: true });
     const location = window.navigator && window.navigator.geolocation;
@@ -99,47 +108,42 @@ class Header extends Component<any, any> {
     return (
       <div className="header">
         <Link to="/" className="logo">
-          <Placeholder className="header__icon"></Placeholder>
+          <Skeleton className="header__icon" avatar />
         </Link>
         <SearchPlaces onPlacesChanged={this.onSearch} />
-        <Button.Group style={{ marginRight: "8px" }}>
-          <Button
-            icon="location arrow"
-            onClick={this.getMyLocation}
-            loading={loadingLocation}
-            disabled={loadingLocation}
-          />
-          <Dropdown
-            icon="filter"
-            floating
-            button
-            className="icon"
-            open={filterOpen}
-            onClick={this.toggleFilterOpen}
-            onBlur={this.toggleFilterClosed}
-          >
-            <Dropdown.Menu>
-              <Input icon="search" iconPosition="left" name="search" />
-              <Dropdown.Divider />
-              <Dropdown.Item
-                label={{ color: "red", empty: true, circular: true }}
-                text="Important"
+        {!this.state.width || this.state.width > 600 ? (
+          <>
+            <Button.Group style={{ marginRight: "8px" }} size="large">
+              <Button
+                icon="environment"
+                onClick={this.getMyLocation}
+                loading={loadingLocation}
+                disabled={
+                  loadingLocation || this.props.location.pathname !== "/"
+                }
               />
-              <Dropdown.Item
-                label={{ color: "blue", empty: true, circular: true }}
-                text="Announcement"
-              />
-              <Dropdown.Item
-                label={{ color: "black", empty: true, circular: true }}
-                text="Discussion"
-              />
-            </Dropdown.Menu>
-          </Dropdown>
-        </Button.Group>
-        <Link to='/create-event'>
-          <Button icon="add" content="Create Event"></Button>
-        </Link>
-        <Placeholder className="header__icon"></Placeholder>
+              <Button icon="filter" />
+            </Button.Group>
+            <Link to="/create-event">
+              <Button
+                icon="plus"
+                type="primary"
+                size="large"
+                style={{ fontWeight: "bold" }}
+              >
+                Create Event
+              </Button>
+            </Link>
+          </>
+        ) : (
+          <></>
+        )}
+        <Avatar
+          shape="square"
+          icon="user"
+          className="header__avatar"
+          size="large"
+        />
       </div>
     );
   }
@@ -147,7 +151,8 @@ class Header extends Component<any, any> {
 
 const mapDispatchToProps = (dispatch: any) => ({
   updateCenter: (center: any) => dispatch(updateCenter(center)),
-  updateLocation: (current_location: any) => dispatch(updateLocation(current_location))
+  updateLocation: (current_location: any) =>
+    dispatch(updateLocation(current_location))
 });
 
 const mapStateToProps = (state, ownProps) => {
@@ -157,4 +162,4 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Header);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Header));

@@ -47,14 +47,7 @@ class SearchPlaces extends React.Component<SearchPlacesProps> {
 
   render() {
     return (
-      <div
-        className="ui large icon input search-places"
-        style={{
-          marginRight: "8px",
-          width: "300px",
-          height: "36px"
-        }}
-      >
+      <div className="ui large icon input search-places" style={{ height: 40 }}>
         <input
           ref="input"
           id="search-input"

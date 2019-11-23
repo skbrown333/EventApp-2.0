@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Input, Placeholder } from "semantic-ui-react";
 
+/* Store */
+import { updateCenter } from "../../store/actions";
+
 /* Styles */
 import "./_sidebar.scss";
 
@@ -13,7 +16,13 @@ class Sidebar extends Component<any, any> {
       let event = events[i];
 
       eventRows.push(
-        <div className="event" key={event._id} onClick={() => {}}>
+        <div
+          className="event"
+          key={event._id}
+          onClick={() => {
+            this.props.updateCenter({ lat: event.lat, lng: event.lng });
+          }}
+        >
           <Placeholder className="header__icon"></Placeholder>
           <div className="name">{event.title}</div>
         </div>
@@ -33,6 +42,12 @@ class Sidebar extends Component<any, any> {
   }
 }
 
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    updateCenter: (center: any) => dispatch(updateCenter(center))
+  };
+};
+
 const mapStateToProps = (state, ownProps) => {
   return {
     events: state.events,
@@ -40,4 +55,4 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default connect(mapStateToProps, null)(Sidebar);
+export default connect(mapStateToProps, mapDispatchToProps)(Sidebar);

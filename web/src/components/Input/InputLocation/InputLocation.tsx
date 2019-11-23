@@ -1,6 +1,5 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { Input } from "semantic-ui-react";
 
 // @ts-ignore
 const google = window.google;

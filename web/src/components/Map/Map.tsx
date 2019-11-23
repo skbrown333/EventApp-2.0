@@ -105,15 +105,15 @@ export class MapComponent extends React.Component<any, State> {
     const { current_location } = this.props;
     let locationPin;
 
-    if(Object.keys(current_location).length) {
+    if (Object.keys(current_location).length) {
       locationPin = (
         <LocationPin
-          key={'location-pin'}
+          key={"location-pin"}
           lat={current_location.lat}
           lng={current_location.lng}
           event={null}
         />
-      )
+      );
     }
     return (
       <div className="map">

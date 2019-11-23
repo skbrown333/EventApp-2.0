@@ -6,7 +6,12 @@ import EventService from "./services/EventService/event.service";
 import { connect } from "react-redux";
 import { withCookies } from "react-cookie";
 import { COOKIES, ENV } from "./constants/constants";
-import { updateAccount, updateEvents, updateCenter, updateZoom } from "./store/actions";
+import {
+  updateAccount,
+  updateEvents,
+  updateCenter,
+  updateZoom
+} from "./store/actions";
 import { Map } from "./components/Map/Map";
 import Header from "./components/Header/Header";
 import Sidebar from "./components/Sidebar/Sidebar";
@@ -25,18 +30,16 @@ export class AppComponent extends React.Component<any> {
     super(props);
 
     let values: any = queryString.parse(this.props.location.search);
-    console.log('values: ', values);
     let lat: any = parseFloat(values.lat);
     let lng: any = parseFloat(values.lng);
     let zoom: any = parseInt(values.zoom);
-    console.log('zoom: ', zoom);
 
     if (lat && lng) {
       this.props.updateCenter({ lat, lng });
     }
 
-    if(zoom) {
-      this.props.updateZoom(zoom)
+    if (zoom) {
+      this.props.updateZoom(zoom);
     }
 
     this.state = {
