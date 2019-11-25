@@ -1,10 +1,14 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 
+import { Input } from "antd";
+
 import "./_search-places.scss";
 
 // @ts-ignore
 const google = window.google;
+
+const { Search } = Input;
 
 interface SearchPlacesProps {
   onPlacesChanged: any;
@@ -13,22 +17,26 @@ interface SearchPlacesProps {
 class SearchPlaces extends React.Component<SearchPlacesProps> {
   searchBar: any;
   searchBarListener: any;
+  readonly state: any;
 
   constructor(props: SearchPlacesProps) {
     super(props);
 
-    this.onPlacesChanged = this.onPlacesChanged.bind(this);
+    this.state = {
+      location: ""
+    };
   }
-  onPlacesChanged() {
+  onPlacesChanged = () => {
     if (this.props.onPlacesChanged) {
-      this.searchBar.getPlaces();
-
       let data = this.searchBar.getPlaces();
+      if (data && data[0].formatted_address)
+        this.setState({ location: data[0].formatted_address });
+
       this.props.onPlacesChanged(data);
     }
-  }
+  };
   componentDidMount() {
-    let input = ReactDOM.findDOMNode(this.refs.input);
+    let input = document.getElementById("search-text");
 
     this.searchBar = new google.maps.places.SearchBox(input);
     this.searchBarListener = this.searchBar.addListener(
@@ -41,23 +49,23 @@ class SearchPlaces extends React.Component<SearchPlacesProps> {
   }
 
   clearInput = () => {
-    let input: any = ReactDOM.findDOMNode(this.refs.input);
-    input.value = "";
+    this.setState({ location: "" });
   };
 
   render() {
     return (
-      <div className="ui large icon input search-places" style={{ height: 40 }}>
-        <input
-          ref="input"
-          id="search-input"
-          type="text"
-          onChange={this.onPlacesChanged}
-          onClick={this.clearInput}
-          placeholder="Search..."
-        />
-        <i aria-hidden="true" className="search icon"></i>
-      </div>
+      <Search
+        id="search-text"
+        value={this.state.location}
+        placeholder="Search Location..."
+        onChange={e => {
+          this.setState({ location: e.target.value });
+        }}
+        onSearch={this.onPlacesChanged}
+        onClick={this.clearInput}
+        className="search-places"
+        size="large"
+      />
     );
   }
 }

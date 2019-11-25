@@ -26,64 +26,8 @@ div#root {
   background: $color-white;
 }
 
-.ui.card,
-.ui.cards > .card {
-  position: absolute;
-  height: 80%;
-  top: 80px;
-  left: 20px;
-}
-
-.date-container {
-  .ui.menu .item {
-    padding: 2px;
-  }
-
-  .ui.input > input {
-    border: none;
-  }
-}
-
 .App-link {
   color: #09d3ac;
-}
-
-.ui.form.event-form {
-  width: 100%;
-  margin: 0 0 0 0;
-  display: flex;
-  flex-wrap: wrap;
-
-  .field {
-    margin: 0 !important;
-  }
-
-  button.submit-event {
-    width: calc(80% + 4px);
-  }
-
-  textarea {
-    width: 100%;
-    background: $color-gray-background;
-    border: none;
-  }
-
-  .field.container {
-    margin: 8px 4px 8px 0 !important;
-
-    .field {
-      width: 100%;
-    }
-    &.location {
-      max-width: calc(80% + 4px);
-      min-width: calc(80% + 4px);
-    }
-
-    input {
-      background: $color-gray-background !important;
-      border: none;
-    }
-  }
 }
 
 .pac-container {

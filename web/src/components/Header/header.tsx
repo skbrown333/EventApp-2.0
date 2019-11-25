@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { Button, Avatar, Skeleton } from "antd";
+import { Button, Avatar, Skeleton, Icon } from "antd";
 import { updateCenter, updateLocation } from "../../store/actions";
 
 import SearchPlaces from "../SearchPlaces/SearchPlaces";
@@ -28,7 +28,7 @@ class Header extends Component<any, any> {
     window.addEventListener("resize", this.updateWindowDimensions);
   };
 
-  componentDidUnmount() {
+  componentWillUnmount() {
     window.removeEventListener("resize", this.updateWindowDimensions);
   }
 

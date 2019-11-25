@@ -6,10 +6,10 @@
   flex: 1;
   align-items: center;
   margin: 16px 0 128px 0;
-  max-width: 800px;
+  max-width: 500px;
 
   .dropzone-container {
-    width: 80%;
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -28,6 +28,53 @@
     &:focus {
       outline: none;
       border: 2px dashed rgb(153, 153, 255);
+    }
+
+    &__icon {
+      font-size: 128px;
+      color: $color-gray-dark;
+    }
+  }
+
+  .event-form {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+
+    .ant-row {
+      margin: 0 4px 4px 4px;
+
+      &.title {
+        width: 100%;
+      }
+
+      &.location {
+        width: 100%;
+      }
+
+      &.description {
+        width: 100%;
+        background: $color-gray-background;
+      }
+
+      .ant-form-item-children {
+        input {
+          background: $color-gray-background;
+          &:focus {
+            outline: none;
+            border: 1px solid #d9d9d9;
+            box-shadow: none;
+          }
+        }
+      }
+
+      .ant-form-item-label {
+        font-weight: bold;
+
+        label {
+          color: $color-gray-dark;
+        }
+      }
     }
   }
 }

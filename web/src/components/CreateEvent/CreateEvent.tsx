@@ -4,12 +4,21 @@ import { withRouter } from "react-router-dom";
 import moment from "moment";
 
 /* UI */
-import { Button, Form, Icon } from "semantic-ui-react";
+import {} from "semantic-ui-react";
 import { InputLocation } from "../Input/InputLocation/InputLocation";
 import Dropzone from "react-dropzone";
 import ReactCrop from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
-import { TimePicker, Input, DatePicker, message } from "antd";
+import {
+  Form,
+  Icon,
+  Button,
+  TimePicker,
+  Input,
+  DatePicker,
+  message
+} from "antd";
+import { Editor, EditorState, RichUtils } from "draft-js";
 /* Services */
 import EventService from "../../services/EventService/event.service";
 /* Store */
@@ -33,6 +42,7 @@ interface State {
   image: any;
   crop: any;
   imageHeight: number;
+  editorState: any;
 }
 
 export class CreateEventComponent extends React.Component<any, State> {
@@ -57,7 +67,8 @@ export class CreateEventComponent extends React.Component<any, State> {
         unit: "%",
         aspect: 16 / 9,
         height: "100"
-      }
+      },
+      editorState: EditorState.createEmpty()
     };
 
     this.dropzoneRef = React.createRef();
@@ -107,7 +118,15 @@ export class CreateEventComponent extends React.Component<any, State> {
 
       let event = await eventService.create(body);
       this.props.addEvent(event);
-      message.success(`Event Created: ${event.title}`);
+      let url = `/?lat=${event.lat}&lng=${event.lng}&zoom=13`;
+      console.log("url: ", url);
+      message.success(
+        <div>
+          <p>
+            Event Created: <a href={url}>{event.title}</a>
+          </p>
+        </div>
+      );
     } catch (e) {
       message.error(`Error Creating Event`);
     }
@@ -171,71 +190,92 @@ export class CreateEventComponent extends React.Component<any, State> {
               }}
             />
           ) : (
-            <Icon
-              size="massive"
-              style={{ color: "#d8d8d8" }}
-              name="image outline"
-            />
+            <Icon type="picture" className="dropzone__icon" />
           )}
         </div>
       </section>
     );
   };
 
+  onEditorChange = editorState => this.setState({ editorState });
+
   render() {
     const { title, description, startTime, endTime } = this.state;
+    const date = moment(new Date());
+    const defaultStart = date.add(30 - (date.minute() % 30), "minutes");
+    const defaultEnd = moment(date).add(1, "hour");
     return (
       <div className="create-event">
         <Form className="event-form" onSubmit={this.handleSubmit}>
-          <Form.Field className="container">
-            <label>Title</label>
+          <Dropzone onDrop={this.onDrop}>{this.renderDropZone}</Dropzone>
+          <Form.Item className="title" label="Title">
             <Input
               data-lpignore="true"
               value={title}
               onChange={e => this.setState({ title: e.target.value })}
             />
-          </Form.Field>
-          <Dropzone onDrop={this.onDrop}>{this.renderDropZone}</Dropzone>
-
-          <Form.Field className="container">
-            <label>Date</label>
+          </Form.Item>
+          <Form.Item className="container" required label="Date">
             <DatePicker
+              defaultValue={date}
               onChange={(date: moment.Moment) => {
                 this.setState({ date });
               }}
             />
-          </Form.Field>
-          <Form.Field className="container">
-            <label>Start Time</label>
+          </Form.Item>
+          <Form.Item className="container" label="Start Time" required>
             <TimePicker
+              use12Hours={true}
+              minuteStep={15}
               inputReadOnly
+              defaultValue={defaultStart}
               onChange={(e, time) => {
                 this.setState({ startTime: time });
               }}
-              format={"HH:mm"}
-              defaultOpenValue={moment("00:00", "HH:mm")}
+              format={"h:mm A"}
             />
-          </Form.Field>
-          <Form.Field className="container">
-            <label>End Time</label>
+          </Form.Item>
+          <Form.Item className="container" label="End Time" required>
             <TimePicker
+              use12Hours
+              minuteStep={15}
               inputReadOnly
+              defaultValue={defaultEnd}
               onChange={(e, time) => {
                 this.setState({ endTime: time });
               }}
-              format={"HH:mm"}
-              defaultOpenValue={moment("00:00", "HH:mm")}
+              format={"h:mm A"}
             />
-          </Form.Field>
-          <Form.Field className="container location">
-            <label>Location</label>
+          </Form.Item>
+          <Form.Item className="location" label="Location" required>
             <InputLocation onChange={this.handleLocation} />
-          </Form.Field>
-          <Form.Field className="container location">
-            <label>Description</label>
-            <textarea name="description" />
-          </Form.Field>
-          <Button className="submit-event" type="submit" fluid primary>
+          </Form.Item>
+          <Form.Item className="description" label="Description" required>
+            <Button.Group>
+              <Button
+                icon="bold"
+                onClick={() => {
+                  this.onEditorChange(
+                    RichUtils.toggleInlineStyle(this.state.editorState, "BOLD")
+                  );
+                }}
+              />
+              <Button
+                icon="italic"
+                onClick={() => {
+                  this.onEditorChange(
+                    RichUtils.toggleInlineStyle(this.state.editorState, "BOLD")
+                  );
+                }}
+              />
+            </Button.Group>
+
+            <Editor
+              editorState={this.state.editorState}
+              onChange={this.onEditorChange}
+            />
+          </Form.Item>
+          <Button className="submit-event" type="primary">
             Submit
           </Button>
         </Form>

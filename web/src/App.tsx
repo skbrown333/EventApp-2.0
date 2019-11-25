@@ -90,6 +90,7 @@ export class AppComponent extends React.Component<any> {
   getContent = () => {
     const { loadingAccount, loadingEvents } = this.state;
     const { cookies, account } = this.props;
+    console.log("loading");
 
     if (!loadingAccount && !loadingEvents) {
       return (

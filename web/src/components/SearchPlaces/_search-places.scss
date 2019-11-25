@@ -1,6 +1,11 @@
 @import "../../styles/colors";
 
-.ui.input.search-places > input {
-  //background: $color-gray-background;
-  //border: none;
+.search-places {
+  .ant-input {
+    &:focus {
+      outline: none;
+      border: 1px solid #40a9ff;
+      box-shadow: none;
+    }
+  }
 }
