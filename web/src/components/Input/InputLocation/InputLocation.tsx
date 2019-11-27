@@ -5,13 +5,11 @@ import { Input } from "antd";
 // @ts-ignore
 const google = window.google;
 
-const { Search } = Input;
-
 interface State {
   readonly location: string;
 }
 interface InputProps {
-  onChange: any;
+  onChange?: any;
 }
 export class InputLocation extends React.Component<InputProps, State> {
   readonly state: State;
@@ -41,6 +39,7 @@ export class InputLocation extends React.Component<InputProps, State> {
   }
 
   placesChanged = () => {
+    if (!this.state.location.length) return this.props.onChange(null);
     let data = this.searchBar.getPlaces();
 
     if (!data || !data.length) return;

@@ -28,6 +28,7 @@ class SearchPlaces extends React.Component<SearchPlacesProps> {
   }
   onPlacesChanged = () => {
     if (this.props.onPlacesChanged) {
+      if (!this.state.location.length) return this.props.onPlacesChanged(null);
       let data = this.searchBar.getPlaces();
       if (data && data[0].formatted_address)
         this.setState({ location: data[0].formatted_address });

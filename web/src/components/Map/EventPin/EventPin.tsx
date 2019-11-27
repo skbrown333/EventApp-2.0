@@ -30,8 +30,8 @@ export class EventPin extends React.Component<EventPinProps, State> {
       <div className="event-pin">
         <img
           className={"event-pin__icon " + this.state.class}
-          src="https://react.semantic-ui.com/images/wireframe/square-image.png"
-          alt="https://react.semantic-ui.com/images/wireframe/square-image.png"
+          src={`https://s3.amazonaws.com/photos.priestly.app/users/5b59e45526bbe3154f60e53c/events/${this.props.event._id}/${this.props.event._id}.png`}
+          alt=""
         />
       </div>
     );
