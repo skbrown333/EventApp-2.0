@@ -5,10 +5,17 @@ const NODE_ENV = process.env.NODE_ENV;
 
 let isLocal = NODE_ENV === "development";
 let env: any = {};
-env.base_url = isLocal ? "http://localhost:3000" : "http://localhost:3000";
+env.base_url = isLocal ? "http://192.168.1.68:3000" : "http://localhost:3000";
 env.isLocal = isLocal;
 
 export const ENV = env;
+
+/**
+ * AWS
+ */
+export const AWS = {
+  bucket: "photos.priestly.app"
+};
 
 /**
  * COOKIES
@@ -18,6 +25,9 @@ export const COOKIES = {
   token: "pr_jwt"
 };
 
+/**
+ * MAP
+ */
 export const MAP = {
   default_location: {
     lat: 43.079,

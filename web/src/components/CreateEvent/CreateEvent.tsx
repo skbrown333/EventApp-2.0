@@ -2,14 +2,10 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import moment from "moment";
-import AWS from "aws-sdk";
 
 /* UI */
-import {} from "semantic-ui-react";
 import { InputLocation } from "../Input/InputLocation/InputLocation";
 import Dropzone from "react-dropzone";
-import ReactCrop from "react-image-crop";
-import "react-image-crop/dist/ReactCrop.css";
 import {
   Form,
   Icon,
@@ -21,25 +17,25 @@ import {
   Spin
 } from "antd";
 
-import { Editor, EditorState, RichUtils } from "draft-js";
 /* Services */
 import EventService from "../../services/EventService/event.service";
+import S3Service from "../../services/s3.service";
+
 /* Store */
 import { addEvent } from "../../store/actions";
 
 /* Styles */
 import "./_create-event.scss";
-import { labeledStatement } from "@babel/types";
 
 const eventService = new EventService();
+const s3Service = new S3Service();
+const { TextArea } = Input;
 
 interface State {
   image: any;
   file: any;
   loading: boolean;
-  crop: any;
   imageHeight: number;
-  editorState: any;
 }
 
 export class CreateEventComponent extends React.Component<any, State> {
@@ -53,13 +49,7 @@ export class CreateEventComponent extends React.Component<any, State> {
       image: null,
       file: null,
       loading: false,
-      imageHeight: 0,
-      crop: {
-        unit: "%",
-        aspect: 16 / 9,
-        height: "100"
-      },
-      editorState: EditorState.createEmpty()
+      imageHeight: 0
     };
 
     this.dropzoneRef = React.createRef();
@@ -76,19 +66,18 @@ export class CreateEventComponent extends React.Component<any, State> {
   handleSubmit = e => {
     e.preventDefault();
     const { file } = this.state;
+    const { account } = this.props;
 
     this.props.form.validateFields(async (err, fieldsValue) => {
       if (err) {
         return;
-      }
-
-      if (!file) {
+      } else if (!file) {
         message.error("Image required");
         return;
       }
 
       const values = {
-        cre_account: "5b59e45526bbe3154f60e53c",
+        cre_account: account._id,
         cre_date: new Date(),
         title: fieldsValue["title"],
         date: fieldsValue["date"],
@@ -99,26 +88,15 @@ export class CreateEventComponent extends React.Component<any, State> {
         address: fieldsValue["location"].address
       };
       this.setState({ loading: true });
+
       try {
         let event = await eventService.create(values);
         this.props.addEvent(event);
 
         // Upload to S3
-        AWS.config.update({
-          region: "us-east-1",
-          credentials: new AWS.CognitoIdentityCredentials({
-            IdentityPoolId: "us-east-1:9a6b4509-7fcf-4576-970a-ea1b0b121626"
-          })
-        });
-        const S3 = new AWS.S3();
-        const objParams = {
-          Bucket: `photos.priestly.app/users/5b59e45526bbe3154f60e53c/events/${event._id}`,
-          Key: `${event._id}.png`,
-          Body: file,
-          ACL: "public-read",
-          ContentType: file.type // TODO: You should set content-type because AWS SDK will not automatically set file MIME
-        };
-        S3.putObject(objParams, err => {
+        let key = `${event._id}.png`;
+        let path = `users/${account._id}/events/${event._id}`;
+        s3Service.uploadPhoto(key, file, path, err => {
           if (err) {
             message.error(err.message);
             return;
@@ -144,10 +122,6 @@ export class CreateEventComponent extends React.Component<any, State> {
     });
   };
 
-  onCropChange = crop => {
-    this.setState({ crop });
-  };
-
   onDrop = acceptedFiles => {
     this.setState({ file: acceptedFiles[0] });
     const reader = new FileReader();
@@ -163,7 +137,7 @@ export class CreateEventComponent extends React.Component<any, State> {
   };
 
   renderDropZone = ({ getRootProps, getInputProps }) => {
-    const { image, crop, imageHeight } = this.state;
+    const { image, imageHeight } = this.state;
     return (
       <section
         className="dropzone-container"
@@ -177,20 +151,17 @@ export class CreateEventComponent extends React.Component<any, State> {
             height: imageHeight
           }}
         >
-          <input disabled={!!image} {...getInputProps()} />
+          <input {...getInputProps()} />
 
           {image ? (
-            <ReactCrop
+            <img
               src={image}
-              crop={crop}
-              ruleOfThirds
-              onImageLoaded={() => {}}
-              onComplete={c => {}}
-              onChange={this.onCropChange}
-              imageStyle={{
-                width: this.dropzoneRef.current.getBoundingClientRect().width,
-                height: this.dropzoneRef.current.getBoundingClientRect().height,
-                objectFit: "contain"
+              style={{
+                width:
+                  this.dropzoneRef.current.getBoundingClientRect().width - 4,
+                height:
+                  this.dropzoneRef.current.getBoundingClientRect().height - 4,
+                objectFit: "cover"
               }}
             />
           ) : (
@@ -221,7 +192,7 @@ export class CreateEventComponent extends React.Component<any, State> {
                 ]
               })(<Input />)}
             </Form.Item>
-            <Form.Item label="DatePicker">
+            <Form.Item label="Date">
               {getFieldDecorator("date", {
                 initialValue: date,
                 rules: [
@@ -269,6 +240,11 @@ export class CreateEventComponent extends React.Component<any, State> {
                   }
                 ]
               })(<InputLocation />)}
+            </Form.Item>
+            <Form.Item className="location" label="Details">
+              {getFieldDecorator("details", {
+                rules: [{}]
+              })(<TextArea autoSize={{ minRows: 5 }} />)}
             </Form.Item>
             <Form.Item>
               <Button className="submit-event" type="primary" htmlType="submit">

@@ -118,7 +118,7 @@ export class AppComponent extends React.Component<any> {
               exact
               path="/create-event"
               render={() => {
-                return Object.keys(account).length > 0 ? (
+                return Object.keys(account).length < 1 ? (
                   <Redirect to="/login" />
                 ) : (
                   <CreateEvent />

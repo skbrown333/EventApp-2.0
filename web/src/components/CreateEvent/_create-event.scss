@@ -1,4 +1,5 @@
 @import "../../styles/colors";
+@import "../../styles/responsive";
 
 .create-event {
   display: flex;
@@ -6,7 +7,11 @@
   flex: 1;
   align-items: center;
   margin: 16px 0 128px 0;
-  max-width: 500px;
+  max-width: 90%;
+
+  @include respond-to(gt-xs) {
+    max-width: 500px;
+  }
 
   .dropzone-container {
     width: 100%;
@@ -42,7 +47,11 @@
     width: 100%;
 
     .ant-row {
-      margin: 0 4px 12px 4px;
+      margin: 0 4px 24px 4px;
+
+      &.ant-form-item-with-help {
+        margin: 0 4px 3px 4px;
+      }
 
       &.title {
         width: 100%;
@@ -59,6 +68,15 @@
 
       .ant-form-item-children {
         input {
+          background: $color-gray-background;
+          &:focus {
+            outline: none;
+            border: 1px solid #d9d9d9;
+            box-shadow: none;
+          }
+        }
+
+        textarea {
           background: $color-gray-background;
           &:focus {
             outline: none;
