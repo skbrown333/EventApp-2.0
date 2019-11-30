@@ -1,7 +1,17 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Placeholder } from "semantic-ui-react";
-import { Input, Divider } from "antd";
+import {
+  Input,
+  Divider,
+  Dropdown,
+  Menu,
+  Icon,
+  Button,
+  Skeleton,
+  List,
+  Avatar
+} from "antd";
 
 /* Store */
 import { updateCenter, updateZoom } from "../../store/actions";
@@ -12,6 +22,37 @@ import "./_sidebar.scss";
 const { Search } = Input;
 
 class Sidebar extends Component<any, any> {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      sort: "Distance"
+    };
+  }
+
+  getDistance(event) {
+    const { center } = this.props;
+
+    if (event.lat == center.lat && event.lng == center.lng) {
+      return 0;
+    } else {
+      let radlat1 = (Math.PI * event.lat) / 180;
+      let radlat2 = (Math.PI * center.lat) / 180;
+      let theta = event.lng - center.lng;
+      let radtheta = (Math.PI * theta) / 180;
+      let dist =
+        Math.sin(radlat1) * Math.sin(radlat2) +
+        Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+      if (dist > 1) {
+        dist = 1;
+      }
+      dist = Math.acos(dist);
+      dist = (dist * 180) / Math.PI;
+      dist = dist * 60 * 1.1515;
+      return dist;
+    }
+  }
+
   getEvents = () => {
     let eventRows = [];
     let events = this.props.events;
@@ -28,8 +69,11 @@ class Sidebar extends Component<any, any> {
               this.props.updateZoom(13);
             }}
           >
-            <Placeholder className="header__icon"></Placeholder>
-            <div className="name">{event.title}</div>
+            <Skeleton
+              avatar
+              paragraph={{ rows: 2 }}
+              className="event--skeleton"
+            />
           </div>
           <Divider />
         </>
@@ -39,11 +83,77 @@ class Sidebar extends Component<any, any> {
     return eventRows;
   };
 
+  getMenu = () => {
+    return (
+      <Menu>
+        <Menu.Item>Distance</Menu.Item>
+        <Menu.Item>Interest</Menu.Item>
+      </Menu>
+    );
+  };
+
   render() {
+    const menu = (
+      <Menu>
+        <Menu.Item
+          onClick={() => {
+            this.setState({ sort: "distance" });
+          }}
+        >
+          distance
+        </Menu.Item>
+        <Menu.Item
+          onClick={() => {
+            this.setState({ sort: "interest" });
+          }}
+        >
+          interest
+        </Menu.Item>
+      </Menu>
+    );
+
+    const { sort } = this.state;
+    const { events } = this.props;
+
     return (
       <div className="sidebar">
         <Search className="sidebar__search" placeholder="Search..." />
-        <div className="sidebar__list">{this.getEvents()}</div>
+        <div className="sidebar__sort-by">
+          Sort By:
+          <Dropdown overlay={menu} trigger={["hover"]}>
+            <Button className="sidebar__sort-by__button">
+              {sort}
+              <Icon type="sliders" className="sidebar__sort-by__icon" />
+            </Button>
+          </Dropdown>
+        </div>
+        <List
+          className="sidebar__list"
+          itemLayout="vertical"
+          dataSource={events}
+          renderItem={(event: any) => (
+            <List.Item
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                this.props.updateCenter({ lat: event.lat, lng: event.lng });
+                this.props.updateZoom(13);
+              }}
+            >
+              <List.Item.Meta
+                avatar={
+                  <Avatar
+                    src={`https://s3.amazonaws.com/photos.priestly.app/users/${event.cre_account}/events/${event._id}/${event._id}.png`}
+                  />
+                }
+                title={<span>{event.title}</span>}
+                description={
+                  (Math.round(this.getDistance(event) * 4) / 4).toFixed(2) +
+                  " mi"
+                }
+              />
+            </List.Item>
+          )}
+        />
       </div>
     );
   }
@@ -59,6 +169,7 @@ const mapDispatchToProps = (dispatch: any) => {
 const mapStateToProps = (state, ownProps) => {
   return {
     events: state.events,
+    center: state.center,
     cookies: ownProps.cookies
   };
 };

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { Button, Avatar, Skeleton, Icon } from "antd";
+import { Button, Avatar, Skeleton, Icon, Dropdown, Menu } from "antd";
 import { updateCenter, updateLocation } from "../../store/actions";
 
 import SearchPlaces from "../SearchPlaces/SearchPlaces";
@@ -122,7 +122,15 @@ class Header extends Component<any, any> {
                   loadingLocation || this.props.location.pathname !== "/"
                 }
               />
-              <Button icon="filter" />
+              <Dropdown
+                overlay={
+                  <Menu>
+                    <Menu.Item>Filter</Menu.Item>
+                  </Menu>
+                }
+              >
+                <Button icon="filter" />
+              </Dropdown>
             </Button.Group>
             <Link to="/create-event">
               <Button

@@ -33,19 +33,29 @@
     }
   }
 
+  &__sort-by {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    margin-bottom: 24px;
+
+    &__sort {
+      margin-left: auto;
+      margin-right: 16px;
+      font-weight: normal;
+    }
+
+    &__button {
+      margin-left: auto;
+      font-weight: bold;
+      text-transform: lowercase;
+    }
+  }
+
   &__list {
     overflow-y: auto;
     width: 260px;
-    padding-right: 22px;
+    padding-right: 36px;
     margin-bottom: 40px;
-    .event {
-      display: flex;
-      margin: 8px 0;
-      cursor: pointer;
-
-      .header__icon {
-        margin: 0px 16px 0px 0px !important;
-      }
-    }
   }
 }
