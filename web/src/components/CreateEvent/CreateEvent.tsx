@@ -192,7 +192,7 @@ export class CreateEventComponent extends React.Component<any, State> {
                 ]
               })(<Input />)}
             </Form.Item>
-            <Form.Item label="Date">
+            <Form.Item className="date" label="Date">
               {getFieldDecorator("date", {
                 initialValue: date,
                 rules: [
@@ -246,9 +246,15 @@ export class CreateEventComponent extends React.Component<any, State> {
                 rules: [{}]
               })(<TextArea autoSize={{ minRows: 5 }} />)}
             </Form.Item>
-            <Form.Item>
-              <Button className="submit-event" type="primary" htmlType="submit">
-                Submit
+            <Form.Item className="location">
+              <Button
+                className="submit-event"
+                type="primary"
+                htmlType="submit"
+                size="large"
+                style={{ fontWeight: "bold", width: "100%" }}
+              >
+                Create Event
               </Button>
             </Form.Item>
           </Form>

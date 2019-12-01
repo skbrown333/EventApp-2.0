@@ -30,4 +30,22 @@
       border: 3px solid $color-green;
     }
   }
+
+  &__hover {
+    width: 20vw;
+    height: calc(20vw * 16px / 9px);
+
+    img {
+      max-width: 100%;
+      max-height: 100%;
+      border-radius: 2px;
+    }
+  }
+}
+
+.ant-popover-inner-content {
+  padding: 0px;
+  background: $color-gray-background;
+  border: 2px solid $color-gray-border;
+  font-weight: bold;
 }

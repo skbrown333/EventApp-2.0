@@ -49,6 +49,13 @@ class Sidebar extends Component<any, any> {
       dist = Math.acos(dist);
       dist = (dist * 180) / Math.PI;
       dist = dist * 60 * 1.1515;
+
+      if (dist >= 10) {
+        dist = Math.round(dist);
+      } else {
+        dist = parseFloat((Math.round(dist * 4) / 4).toFixed(2));
+      }
+
       return dist;
     }
   }
@@ -81,15 +88,6 @@ class Sidebar extends Component<any, any> {
     }
 
     return eventRows;
-  };
-
-  getMenu = () => {
-    return (
-      <Menu>
-        <Menu.Item>Distance</Menu.Item>
-        <Menu.Item>Interest</Menu.Item>
-      </Menu>
-    );
   };
 
   render() {
@@ -146,10 +144,7 @@ class Sidebar extends Component<any, any> {
                   />
                 }
                 title={<span>{event.title}</span>}
-                description={
-                  (Math.round(this.getDistance(event) * 4) / 4).toFixed(2) +
-                  " mi"
-                }
+                description={this.getDistance(event) + " mi"}
               />
             </List.Item>
           )}

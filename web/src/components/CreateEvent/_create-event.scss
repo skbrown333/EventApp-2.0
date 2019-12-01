@@ -57,6 +57,12 @@
         width: 100%;
       }
 
+      &.date {
+        width: 100%;
+        @include respond-to(gt-xs) {
+          width: unset;
+        }
+      }
       &.location {
         width: 100%;
       }
