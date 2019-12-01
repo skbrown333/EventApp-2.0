@@ -190,7 +190,7 @@ export class CreateEventComponent extends React.Component<any, State> {
                 rules: [
                   { type: "string", required: true, message: "Enter a title" }
                 ]
-              })(<Input />)}
+              })(<Input size="large" />)}
             </Form.Item>
             <Form.Item className="date" label="Date">
               {getFieldDecorator("date", {
@@ -198,7 +198,7 @@ export class CreateEventComponent extends React.Component<any, State> {
                 rules: [
                   { type: "object", required: true, message: "Select a date" }
                 ]
-              })(<DatePicker />)}
+              })(<DatePicker size="large" />)}
             </Form.Item>
             <Form.Item className="container" label="Start Time">
               {getFieldDecorator("start_time", {
@@ -212,6 +212,7 @@ export class CreateEventComponent extends React.Component<any, State> {
                   minuteStep={15}
                   format={"h:mm A"}
                   inputReadOnly
+                  size="large"
                 />
               )}
             </Form.Item>
@@ -226,6 +227,7 @@ export class CreateEventComponent extends React.Component<any, State> {
                   use12Hours={true}
                   minuteStep={15}
                   format={"h:mm A"}
+                  size="large"
                   inputReadOnly
                 />
               )}
