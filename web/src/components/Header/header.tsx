@@ -36,11 +36,6 @@ class Header extends Component<any, any> {
     this.setState({ width: window.innerWidth });
   };
 
-  shouldComponentUpdate(nextProps) {
-    console.log("nextProps: ", nextProps);
-    return true;
-  }
-
   setMyLocation: any = () => {
     const location = window.navigator && window.navigator.geolocation;
     let myLocation;

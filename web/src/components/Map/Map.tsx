@@ -55,10 +55,6 @@ export class MapComponent extends React.Component<any, State> {
     this.setEventPins();
   }
 
-  componentDidUpdate(nextProps) {
-    console.log("nextProps: ", nextProps);
-  }
-
   isLoading = () => {
     if (this.state.loading) {
       return null;

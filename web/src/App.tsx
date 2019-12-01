@@ -90,7 +90,6 @@ export class AppComponent extends React.Component<any> {
   getContent = () => {
     const { loadingAccount, loadingEvents } = this.state;
     const { cookies, account } = this.props;
-    console.log("loading");
 
     if (!loadingAccount && !loadingEvents) {
       return (
@@ -129,9 +128,7 @@ export class AppComponent extends React.Component<any> {
               exact
               path="/logout"
               render={() => {
-                {
-                  cookies.set(COOKIES.token, null, { secure: !ENV.isLocal });
-                }
+                cookies.remove(COOKIES.token, { secure: !ENV.isLocal });
                 return <Redirect to="/" />;
               }}
             />

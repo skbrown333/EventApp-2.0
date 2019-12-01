@@ -18,6 +18,7 @@ import { updateCenter, updateZoom } from "../../store/actions";
 
 /* Styles */
 import "./_sidebar.scss";
+import { Link } from "react-router-dom";
 
 const { Search } = Input;
 
@@ -115,7 +116,11 @@ class Sidebar extends Component<any, any> {
 
     return (
       <div className="sidebar">
-        <Search className="sidebar__search" placeholder="Search..." />
+        <Search
+          className="sidebar__search"
+          placeholder="Search..."
+          size="large"
+        />
         <div className="sidebar__sort-by">
           Sort By:
           <Dropdown overlay={menu} trigger={["hover"]}>
@@ -136,6 +141,20 @@ class Sidebar extends Component<any, any> {
                 this.props.updateCenter({ lat: event.lat, lng: event.lng });
                 this.props.updateZoom(13);
               }}
+              actions={[
+                <Icon
+                  type="fire"
+                  key="fire"
+                  style={{ color: "orange" }}
+                  onClick={() => {
+                    console.log("Hello");
+                  }}
+                />,
+                <Icon type="ellipsis" key="ellipsis" />,
+                <Link to={`/events/${event._id}`}>
+                  <Button type="link">View</Button>
+                </Link>
+              ]}
             >
               <List.Item.Meta
                 avatar={

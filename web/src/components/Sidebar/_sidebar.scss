@@ -61,5 +61,21 @@
     .ant-list-item-meta-title {
       margin-bottom: 0;
     }
+
+    .ant-list-item-action {
+      li {
+        width: calc(100% / 3);
+
+        button {
+          padding: 0;
+          span {
+            font-weight: bold;
+          }
+        }
+        .ant-list-item-action-split {
+          display: none;
+        }
+      }
+    }
   }
 }
